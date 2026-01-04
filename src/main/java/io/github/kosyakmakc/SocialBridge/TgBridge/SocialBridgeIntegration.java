@@ -1,22 +1,29 @@
 package io.github.kosyakmakc.SocialBridge.TgBridge;
 
 import dev.vanutp.tgbridge.common.Function1;
+import dev.vanutp.tgbridge.common.TelegramBridge;
 import dev.vanutp.tgbridge.common.TgbridgeEvents;
 import dev.vanutp.tgbridge.common.models.TgbridgeTgChatMessageEvent;
-import dev.vanutp.tgbridge.common.modules.ITgbridgeModule;
+import dev.vanutp.tgbridge.common.modules.AbstractModule;
 import io.github.kosyakmakc.socialBridge.AuthSocial.AuthModule;
 import io.github.kosyakmakc.socialBridge.SocialPlatforms.Identifier;
 import io.github.kosyakmakc.socialBridge.SocialPlatforms.IdentifierType;
 import io.github.kosyakmakc.socialBridgeTelegram.TelegramPlatform;
 import kotlin.Pair;
 
-public class TelegramBridgeModule implements ITgbridgeModule {
+public class SocialBridgeIntegration extends AbstractModule {
     private final TgBridgeIntegrationModule tgBridgeIntegrationModule;
 
     private Function1<TgbridgeTgChatMessageEvent> handler;
 
-    public TelegramBridgeModule(TgBridgeIntegrationModule tgBridgeIntegrationModule) {
+    public SocialBridgeIntegration(TgBridgeIntegrationModule tgBridgeIntegrationModule) {
+        super(TelegramBridge.Companion.getINSTANCE());
         this.tgBridgeIntegrationModule = tgBridgeIntegrationModule;
+    }
+
+    @Override
+    public String getPaperId() {
+        return "SocialBridgeIntegration";
     }
 
     @Override
@@ -32,25 +39,22 @@ public class TelegramBridgeModule implements ITgbridgeModule {
 
         TgbridgeEvents.INSTANCE.getTG_CHAT_MESSAGE().addListener(handler = x -> {
             var bridge = tgBridgeIntegrationModule.getBridge();
-            var logger = bridge.getLogger();
-            logger.info("TG_CHAT_MESSAGE");
             var tgPlatform = bridge.getSocialPlatform(TelegramPlatform.class);
             var socialUser = tgPlatform.tryGetUser(new Identifier(IdentifierType.Long, x.getMessage().getFrom().getId())).join();
-            if (socialUser == null) {
-                logger.info("TG_CHAT_MESSAGE socialUser not found");
-                return;
-            }
-            
-            var module = bridge.getModule(AuthModule.class);
-            var minecraftUser = module.tryGetMinecraftUser(socialUser).join();
 
-            if (minecraftUser == null) {
-                logger.info("TG_CHAT_MESSAGE minecraftUser not found");
-                return;
+            var authModuleUsername = x.getMessage().getFrom().getFullName(); // default tg name
+
+            if (socialUser != null) {
+                var module = bridge.getModule(AuthModule.class);
+                var minecraftUser = module.tryGetMinecraftUser(socialUser).join();
+                if (minecraftUser != null) {
+                    authModuleUsername = minecraftUser.getName(); // or minecraft nick if authed
+                }
             }
 
-            logger.info("TG_CHAT_MESSAGE placeholder put - AuthModule-username=" + minecraftUser.getName());
-            x.getPlaceholders().addPlain(new Pair<String,String>("AuthModule-username", minecraftUser.getName()));
+            x.setPlaceholders(x.getPlaceholders().addPlain(new Pair<String, String>(
+                "authsocial-username",
+                authModuleUsername)));
         });
     }
 
@@ -63,13 +67,8 @@ public class TelegramBridgeModule implements ITgbridgeModule {
         handler = null;
     }
 
-    public void destroy() {
-
-    }
-
     @Override
     public boolean getCanBeDisabled() {
         return true;
     }
-
 }

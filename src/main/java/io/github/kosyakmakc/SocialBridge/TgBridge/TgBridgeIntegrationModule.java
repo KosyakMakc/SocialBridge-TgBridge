@@ -6,7 +6,7 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 import dev.vanutp.tgbridge.common.TelegramBridge;
-import io.github.kosyakmakc.socialBridge.IBridgeModule;
+import io.github.kosyakmakc.socialBridge.ISocialModule;
 import io.github.kosyakmakc.socialBridge.ISocialBridge;
 import io.github.kosyakmakc.socialBridge.Commands.MinecraftCommands.IMinecraftCommand;
 import io.github.kosyakmakc.socialBridge.Commands.SocialCommands.ISocialCommand;
@@ -14,10 +14,10 @@ import io.github.kosyakmakc.socialBridge.DatabasePlatform.DefaultTranslations.IT
 import io.github.kosyakmakc.socialBridge.MinecraftPlatform.IModuleLoader;
 import io.github.kosyakmakc.socialBridge.Utils.Version;
 
-public class TgBridgeIntegrationModule implements IBridgeModule {
+public class TgBridgeIntegrationModule implements ISocialModule {
     public static final UUID ID = UUID.fromString("4952fe24-fd17-460b-8421-32ad5a739d86");
     private static final String NAME = "TgBridgeIntegrationModule";
-    private static final Version CompabilityVersion = new Version("0.4.2");
+    private static final Version CompabilityVersion = new Version("0.5.0");
 
     private final List<IMinecraftCommand> minecraftCommands = List.of();
     private final List<ISocialCommand> socialCommands = List.of();
@@ -25,7 +25,7 @@ public class TgBridgeIntegrationModule implements IBridgeModule {
     private final IModuleLoader loader;
 
     private ISocialBridge bridge;
-    private TelegramBridgeModule integrationModule;
+    private SocialBridgeIntegration integrationModule;
 
     public TgBridgeIntegrationModule(IModuleLoader loader) {
         this.loader = loader;
@@ -34,7 +34,7 @@ public class TgBridgeIntegrationModule implements IBridgeModule {
     @Override
     public CompletableFuture<Boolean> enable(ISocialBridge bridge) {
         this.bridge = bridge;
-        integrationModule = new TelegramBridgeModule(this);
+        integrationModule = new SocialBridgeIntegration(this);
         TelegramBridge.Companion.getINSTANCE().addModule(integrationModule);;
         return CompletableFuture.completedFuture(true);
     }
@@ -43,7 +43,6 @@ public class TgBridgeIntegrationModule implements IBridgeModule {
     public CompletableFuture<Boolean> disable() {
         this.bridge = null;
         integrationModule.disable();
-        integrationModule.destroy();
         return CompletableFuture.completedFuture(true);
     }
 

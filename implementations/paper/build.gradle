@@ -21,9 +21,9 @@ repositories {
 
 dependencies {
     implementation project(":")
-    implementation "io.github.kosyakmakc:social-bridge:0.4.2"
-    implementation "io.github.kosyakmakc:social-bridge-telegram:0.4.0"
-    implementation "io.github.kosyakmakc:social-bridge-module-auth:0.4.0"
+    compileOnly "io.github.kosyakmakc:SocialBridge:0.5.0"
+    compileOnly "io.github.kosyakmakc:SocialBridge-telegram:0.5.0"
+    compileOnly "io.github.kosyakmakc:AuthSocial:0.5.0"
 
     compileOnly "io.papermc.paper:paper-api:1.21.8-R0.1-SNAPSHOT"
     testImplementation "io.papermc.paper:paper-api:1.21.8-R0.1-SNAPSHOT"
@@ -38,15 +38,15 @@ tasks {
         minecraftVersion("1.21.8")
 
         downloadPlugins {
-            github("kosyakmakc", "social-bridge", "0.4.2", "SocialBridge-paper-0.4.2.jar")
-            github("kosyakmakc", "social-bridge-telegram", "0.4.0", "SocialBridge-telegram-paper-0.4.0.jar")
-            github("kosyakmakc", "social-bridge-module-auth", "0.4.0", "AuthSocial-paper-0.4.0.jar")
+            github("kosyakmakc", "SocialBridge", "0.5.3", "SocialBridge-paper-0.5.3.jar")
+            github("kosyakmakc", "SocialBridge-telegram", "0.5.2", "SocialBridge-telegram-paper-0.5.2.jar")
+            github("kosyakmakc", "AuthSocial", "0.5.1", "AuthSocial-paper-0.5.1.jar")
         }
     }
 }
 
 shadowJar {
-    archiveBaseName.set('TgBridgeModule-paper')
+    archiveBaseName.set('SocialBridge-TgBridge-paper')
     archiveVersion.set(version.toString())
     archiveClassifier.set('')
 }

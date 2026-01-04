@@ -1,7 +1,0 @@
-name: TgBridgeModule-paper
-version: '0.4.0'
-main: io.github.kosyakmakc.SocialBridge.TgBridge.paper.TgBridgeIntegrationPlugin
-api-version: '1.21'
-authors: [ kosyakmakc ]
-folia-supported: true
-depend: [SocialBridge-paper, SocialBridge-telegram-paper, AuthSocial]
