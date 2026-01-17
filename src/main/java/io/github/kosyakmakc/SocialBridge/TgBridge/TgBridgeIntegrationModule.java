@@ -17,7 +17,7 @@ import io.github.kosyakmakc.socialBridge.Utils.Version;
 public class TgBridgeIntegrationModule implements ISocialModule {
     public static final UUID ID = UUID.fromString("4952fe24-fd17-460b-8421-32ad5a739d86");
     private static final String NAME = "TgBridgeIntegrationModule";
-    private static final Version CompabilityVersion = new Version("0.6.0");
+    private static final Version CompabilityVersion = new Version("0.8.1");
 
     private final List<IMinecraftCommand> minecraftCommands = List.of();
     private final List<ISocialCommand> socialCommands = List.of();
