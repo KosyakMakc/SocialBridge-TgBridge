@@ -1,5 +1,5 @@
 name: SocialBridge-TgBridge
-version: '0.8.0'
+version: '0.9.0'
 main: io.github.kosyakmakc.SocialBridge.TgBridge.paper.TgBridgeIntegrationPlugin
 api-version: '1.21'
 authors: [ kosyakmakc ]
