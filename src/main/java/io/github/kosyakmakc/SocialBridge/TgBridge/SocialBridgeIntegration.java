@@ -40,13 +40,13 @@ public class SocialBridgeIntegration extends AbstractModule {
         TgbridgeEvents.INSTANCE.getTG_CHAT_MESSAGE().addListener(handler = x -> {
             var bridge = tgBridgeIntegrationModule.getBridge();
             var tgPlatform = bridge.getSocialPlatform(TelegramPlatform.class);
-            var socialUser = tgPlatform.tryGetUser(new Identifier(IdentifierType.Long, x.getMessage().getFrom().getId())).join();
+            var socialUser = tgPlatform.tryGetUser(new Identifier(IdentifierType.Long, x.getMessage().getFrom().getId()), null).join();
 
             var authModuleUsername = x.getMessage().getFrom().getFullName(); // default tg name
 
             if (socialUser != null) {
                 var module = bridge.getModule(AuthModule.class);
-                var minecraftUser = module.tryGetMinecraftUser(socialUser).join();
+                var minecraftUser = module.tryGetMinecraftUser(socialUser, null).join();
                 if (minecraftUser != null) {
                     authModuleUsername = minecraftUser.getName(); // or minecraft nick if authed
                 }
