@@ -18,6 +18,8 @@ public class TgBridgeIntegrationModule extends SocialModule {
 
     public TgBridgeIntegrationModule(IModuleLoader loader, Version version) {
         super(loader, CompabilityVersion, version, ID, NAME);
+
+        addDependancy(UUID.fromString("11752e9b-8968-42ca-8513-6ce3e52a27b4"), new Version("0.10.0")); // AuthSocial
     }
 
     @Override
